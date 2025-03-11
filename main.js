@@ -143,9 +143,10 @@ function showMerchantsView() {
   addRemoveActiveNav(merchantsNavButton, itemsNavButton)
   addNewButton.dataset.state = 'merchant'
   show([merchantsView, addNewButton])
-  hide([itemsView])
+  hide([itemsView, couponsView])
   displayMerchants(merchants)
 }
+
 
 function showItemsView() {
   showingText.innerText = "All Items"
@@ -236,21 +237,36 @@ function getMerchantCoupons(event) {
   let merchantId = event.target.closest("article").id.split('-')[1]
   console.log("Merchant ID:", merchantId)
 
-  fetchData(`merchants/${merchantId}`)
+  fetchData(`coupons?merchant_id=${merchantId}`)
   .then(couponData => {
     console.log("Coupon data from fetch:", couponData)
-    displayMerchantCoupons(couponData);
+    displayMerchantCoupons(couponData, merchantId);
   })
 }
 
-function displayMerchantCoupons(coupons) {
+function displayMerchantCoupons(coupons, merchantId) {
   show([couponsView])
-  hide([merchantsView, itemsView])
+  hide([merchantsView, itemsView, addNewButton])
 
-  couponsView.innerHTML = `
-    <p>Coupon data will go here.</p>
-  `
+  showingText.innerText = `Showing: All Coupons for Merchant #${merchantId}`
+  
+  couponsView.innerHTML = '<h2>Available Coupons</h2>'
+  if (coupons.data.length === 0) {
+    couponsView.innerHTML += '<p>No coupons available for this merchant.</p>'
+  } else {
+    coupons.data.forEach(coupon => {
+      couponsView.innerHTML += `
+        <div class="coupon">
+          <p><strong>Code:</strong> ${coupon.attributes.code}</p>
+          <p><strong>Discount:</strong> ${coupon.attributes.discount}%</p>
+          <p><strong>Expiration Date:</strong> ${coupon.attributes.expiration_date}</p>
+          <p><strong>Status:</strong> ${coupon.attributes.active ? 'Active' : 'Inactive'}</p>
+        </div>
+      `
+    })
+  }
 }
+
 
 //Helper Functions
 function show(elements) {
