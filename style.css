@@ -196,6 +196,25 @@ h3 {
   color: var(--red);
 }
 
+/* COUPON STYLING */
+.coupons-view {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.coupon {
+  flex-direction: column;
+  text-align: center;
+  width: 30%;
+}
+
+.coupon h2,
+.coupon p {
+  margin: 5px;
+} 
+
+
 /* STATUS MESSAGES */
 .success {
   color: var(--green);

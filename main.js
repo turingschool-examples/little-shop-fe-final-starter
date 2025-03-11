@@ -143,7 +143,7 @@ function showMerchantsView() {
   addRemoveActiveNav(merchantsNavButton, itemsNavButton)
   addNewButton.dataset.state = 'merchant'
   show([merchantsView, addNewButton])
-  hide([itemsView])
+  hide([itemsView, couponsView])
   displayMerchants(merchants)
 }
 
@@ -184,6 +184,7 @@ function displayItems(items) {
 }
 
 function displayMerchants(merchants) {
+  show ([addNewButton])
     merchantsView.innerHTML = ''
     merchants.forEach(merchant => {
         merchantsView.innerHTML += 
@@ -236,20 +237,31 @@ function getMerchantCoupons(event) {
   let merchantId = event.target.closest("article").id.split('-')[1]
   console.log("Merchant ID:", merchantId)
 
-  fetchData(`merchants/${merchantId}`)
+  fetchData(`merchants/${merchantId}/coupons`)
   .then(couponData => {
     console.log("Coupon data from fetch:", couponData)
-    displayMerchantCoupons(couponData);
+    displayMerchantCoupons(merchantId, couponData);
   })
 }
 
-function displayMerchantCoupons(coupons) {
+function displayMerchantCoupons(id, coupons) {
+  showingText.innerText = `All Coupons for Merchant #${id}`
   show([couponsView])
-  hide([merchantsView, itemsView])
-
-  couponsView.innerHTML = `
-    <p>Coupon data will go here.</p>
-  `
+  hide([merchantsView, itemsView, addNewButton])
+  couponsView.innerHTML = ''
+  let firstHundredCoupons = coupons.slice(0, 99)
+  firstHundredCoupons.forEach((coupon) => {
+    let merchant = findMerchant(coupon.attributes.merchant_id).attributes.name
+    couponsView.innerHTML += `
+    <article class="coupon" id="coupon-${coupon.id}">
+    <img src="" alt="">
+    <h2>${coupon.attributes.name}</h2>
+    <p>${coupon.attributes.description}</p>
+    <p>$${coupon.attributes.unit_price}</p>
+    <p class="merchant-name-in-coupon">Merchant: ${merchant}</p>
+    </article>
+    `
+  })
 }
 
 //Helper Functions
