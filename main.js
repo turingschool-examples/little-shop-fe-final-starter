@@ -240,7 +240,7 @@ function getMerchantCoupons(event) {
   fetchData(`merchants/${merchantId}/coupons`)
   .then(couponData => {
     console.log("Coupon data from fetch:", couponData)
-    displayMerchantCoupons(merchantId, couponData);
+    displayMerchantCoupons(merchantId, couponData.data);
   })
 }
 
@@ -256,8 +256,12 @@ function displayMerchantCoupons(id, coupons) {
     <article class="coupon" id="coupon-${coupon.id}">
     <img src="" alt="">
     <h2>${coupon.attributes.name}</h2>
-    <p>${coupon.attributes.description}</p>
-    <p>$${coupon.attributes.unit_price}</p>
+    <p>Code: ${coupon.attributes.code}</p>
+    <p>Discount Type: ${coupon.attributes.discount_type}</p>
+    <p>Amount Off: ${coupon.attributes.discount_value}</p>
+    <p>Active?: ${coupon.attributes.active}</p>
+    <p>Merchant ID: ${coupon.attributes.merchant_id}</p>
+    <p>Invoice ID: ${coupon.attributes.invoice_id}</p>
     <p class="merchant-name-in-coupon">Merchant: ${merchant}</p>
     </article>
     `
