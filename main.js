@@ -245,28 +245,27 @@ function getMerchantCoupons(event) {
 }
 
 function displayMerchantCoupons(coupons, merchantId) {
-  show([couponsView])
-  hide([merchantsView, itemsView, addNewButton])
+  show([couponsView]);
+  hide([merchantsView, itemsView, addNewButton]);
 
-  showingText.innerText = `Showing: All Coupons for Merchant #${merchantId}`
-  
-  couponsView.innerHTML = '<h2>Available Coupons</h2>'
+  showingText.innerText = `Showing: All Coupons for Merchant #${merchantId}`;
+
+  couponsView.innerHTML = '<h2>Available Coupons</h2>';
   if (coupons.data.length === 0) {
-    couponsView.innerHTML += '<p>No coupons available for this merchant.</p>'
+    couponsView.innerHTML += '<p>No coupons available for this merchant.</p>';
   } else {
     coupons.data.forEach(coupon => {
       couponsView.innerHTML += `
-        <div class="coupon">
-          <p><strong>Code:</strong> ${coupon.attributes.code}</p>
-          <p><strong>Discount:</strong> ${coupon.attributes.discount}%</p>
-          <p><strong>Expiration Date:</strong> ${coupon.attributes.expiration_date}</p>
-          <p><strong>Status:</strong> ${coupon.attributes.active ? 'Active' : 'Inactive'}</p>
-        </div>
-      `
-    })
+        <article class="item" id="coupon-${coupon.id}">
+          <h2>Coupon Code: ${coupon.attributes.code}</h2>
+          <p>Discount: ${coupon.attributes.percent_off ? coupon.attributes.percent_off + '%' : '$' + coupon.attributes.dollars_off}</p>
+          <p>Status: ${coupon.attributes.active ? 'Active' : 'Inactive'}</p>
+          <p class="merchant-name-in-item">Merchant: ${merchantId}</p>
+        </article>
+      `;
+    });
   }
 }
-
 
 //Helper Functions
 function show(elements) {
